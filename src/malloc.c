@@ -36,6 +36,7 @@ void* malloc(size_t size) {
             block->magic = 0x77777777;
         }
     }
+    // +1 to only return pointer from the data region and hide the meta data.
     return (block+1);
 }
 
