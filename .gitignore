@@ -41,6 +41,6 @@
 *.swo
 
 # the implementation files, remove this later.
-malloc.c
+free.c
 malloc
 free
