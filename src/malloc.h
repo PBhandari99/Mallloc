@@ -1,14 +1,19 @@
 #include <sys/types.h>
 
-struct block_meta {
+struct allocated_meta {
     size_t size;
-    struct block_meta* next;
-    int free;
-    int magic; // for debugging only. TODO: remove this in non-debug mode.
 };
 
-#define META_SIZE sizeof(struct block_meta)
+struct free_meta {
+    size_t size;
+    struct free_meta* prev;
+    struct free_meta* next;
+};
+
+#define FREE_META_SIZE sizeof(struct free_meta) // 24 bytes
+#define ALLOCATED_META_SIZE sizeof(struct allocated_meta) // 8 bytes
 
 void* malloc(size_t size);
-struct block_meta* find_free_block(struct block_meta**, size_t);
-struct block_meta* request_space(struct block_meta*, size_t);
+struct allocated_meta* find_free_block(size_t);
+struct allocated_meta* request_space(size_t);
+void split_block(struct free_meta*, size_t, size_t);
