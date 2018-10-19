@@ -3,10 +3,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include "free.h"
 #include "malloc.h"
-
-// Head of the free memory block linked list.
-void* global_base = NULL;
 
 void* malloc(size_t size) {
     struct allocated_meta* block;
