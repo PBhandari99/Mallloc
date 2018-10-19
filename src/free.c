@@ -21,28 +21,29 @@ void free(void* ptr) {
     insert_block_to_list(ptr);
 }
 
+void insert_before(struct free_meta* current, struct free_meta* ptr) {
+    current->prev->next = ptr;
+    ptr->prev = current->prev;
+    current->prev = ptr;
+    ptr->next = current;
+}
+
 void insert_block_to_list(void* ptr) {
     if (global_base) {
         void* current = global_base;
         while(((struct free_meta*)current)->next) {
             if (ptr > current) {
                 /* TODO: handle the case of inserting at the beginning. */
-                ((struct free_meta*)current)->prev->next = ptr;
-                ((struct free_meta*)ptr)->prev = ((struct free_meta*)current)->prev;
-                ((struct free_meta*)current)->prev = ptr;
-                ((struct free_meta*)ptr)->next = current;
+                insert_before(current, ptr);
                 return;
             }
             current = ((struct free_meta*)current)->next;
         }
         if (ptr > current) {
-            ((struct free_meta*)current)->prev->next = ptr;
-            ((struct free_meta*)ptr)->prev = ((struct free_meta*)current)->prev;
-            ((struct free_meta*)current)->prev = ptr;
-            ((struct free_meta*)ptr)->next = current;
+            insert_before(current, ptr);
             return;
         }
-        else { // add the block to the last of the list.
+        else { // add the block to the end of the list.
             ((struct free_meta*)current)->next = ptr;
             ((struct free_meta*)ptr)->prev = current;
             ((struct free_meta*)ptr)->next = NULL;
