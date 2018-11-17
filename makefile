@@ -10,4 +10,4 @@ malloc.o: src/malloc.c
 	$(CC) -c -g src/malloc.c
 
 clean:
-	rm *.o malloc
+	rm -f *.o malloc
